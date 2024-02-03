@@ -10,8 +10,9 @@
 name: Publish Docker image
 
 on:
-  release:
-    types: [published]
+  push:
+    branches:
+      - main
 
 jobs:
   push_to_registry:
@@ -29,7 +30,7 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: gnaskdiashvili/laravelvueinertia
+        uses: gnaskdiashvili/snippetsapp
         with:
           images: my-docker-hub-namespace/my-docker-hub-repository
 
