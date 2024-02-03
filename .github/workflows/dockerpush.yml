@@ -30,7 +30,7 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: gnaskdiashvili/snippetsapp
+        uses: gnaskdiashvili/snippetsapp@latest
         with:
           images: my-docker-hub-namespace/my-docker-hub-repository
 
