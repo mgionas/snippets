@@ -8,7 +8,6 @@ RUN apt-get update && apt-get install -y \
     && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*  # Clean up
 
-
 # Copy the snippets directory to the container
 COPY . /var/www/snippets
 COPY vite.config.example /var/www/snippets/vite.config.js
@@ -19,5 +18,4 @@ RUN a2dissite 000-default.conf \
     && a2ensite laravel.conf \
     && chmod -R 777 /var/www/snippets/storage
 
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
 # Additional configurations or commands can be added here

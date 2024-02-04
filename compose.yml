@@ -1,6 +1,8 @@
 services:
   app:
     image: testup:latest
+    command: npm run dev -- --host 0.0.0.0
+    working_dir: /var/www/snippets  # Set the working directory
     networks:
       - nginxproxymanager_default
     restart: always
