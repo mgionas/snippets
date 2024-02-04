@@ -3,7 +3,7 @@ name: Execute SSH Commands 3
 on:
   push:
     branches:
-      - main  # Or any other branch you want to trigger this workflow
+      - main
 
 jobs:
   ssh-remote-command:
@@ -18,14 +18,25 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H 45.79.249.235 >> ~/.ssh/known_hosts
-          ssh -o StrictHostKeyChecking=no root@45.79.249.235 "echo 'SSH connection successful'"
-          ssh -o StrictHostKeyChecking=no root@45.79.249.235 "docker rm -f runit"
-          ssh -o StrictHostKeyChecking=no root@45.79.249.235 "echo 'remove image'"
-          ssh -o StrictHostKeyChecking=no root@45.79.249.235 "docker run -d -t -p 5001:8000 -p 5002:3000 --name runit gnaskdiashvili/laravelvueinertia"
-          ssh -o StrictHostKeyChecking=no root@45.79.249.235 "echo 'access image'"
-          ssh -o StrictHostKeyChecking=no root@45.79.249.235 "docker exec runit service apache2 start"
-          ssh -o StrictHostKeyChecking=no root@45.79.249.235 "docker exec runit sh -c 'cd /var/www/testApp && npm run dev -- --host 0.0.0.0 --port 3000'"
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+          # Test SSH connection
+          ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "echo 'SSH connection successful'"
+
+          # Remove existing container (ignore errors)
+          ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "docker rm -f runit || true"
+          echo "Container removed or did not exist"
+
+          # Create and start new container
+          ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "docker run -d -t -p 5001:8000 -p 5002:3000 --name runit gnaskdiashvili/laravelvueinertia"
+          echo "Container created and started"
+
+          # Start Apache service inside the container
+          ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "docker exec runit service apache2 start"
+
+          # Start npm process in detached mode
+          ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "docker exec runit sh -c 'nohup npm run dev -- --host 0.0.0.0 --port 3000 > /dev/null 2>&1 &'"
+          echo "npm process started in detached mode"
 
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
