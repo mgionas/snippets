@@ -1,0 +1,9 @@
+services:
+  app:
+    image: testup:latest
+    networks:
+      - nginxproxymanager_default
+    restart: always
+networks:
+  nginxproxymanager_default:
+    external: true
