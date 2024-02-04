@@ -24,7 +24,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no root@45.79.249.235 "echo 'remove image'"
           ssh -o StrictHostKeyChecking=no root@45.79.249.235 "docker run -d -t -p 5001:8000 -p 5002:3000 --name runit gnaskdiashvili/laravelvueinertia"
           ssh -o StrictHostKeyChecking=no root@45.79.249.235 "echo 'access image'"
-          ssh -o StrictHostKeyChecking=no root@45.79.249.235 "docker exec runit bash"
+          ssh -o StrictHostKeyChecking=no root@45.79.249.235 "docker exec -i runit bash"
           ssh -o StrictHostKeyChecking=no root@45.79.249.235 "service apache2 start"
 
 
