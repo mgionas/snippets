@@ -21,7 +21,6 @@ jobs:
           run: |
             install -m 600 -D /dev/null ~/.ssh/authorized_keys
             echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/authorized_keys
-            ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
         - name: connect and pull
           run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ~/ touch itworksfile.txt"
         - name: cleanup
