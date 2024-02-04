@@ -20,25 +20,10 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
-  remove-existing-container:
-    name: Remove Existing Container
-    runs-on: ubuntu-latest
-    needs: test-ssh-connection
-    steps:
-      - name: Remove container
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-          ssh -v -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "docker rm -f runit || true"
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-
   clone-repo:
     name: Clone Repository
     runs-on: ubuntu-latest
-    needs: remove-existing-container
+    needs: test-ssh-connection
     steps:
       - name: Clone repo
         run: |

@@ -4,7 +4,7 @@ import vue from '@vitejs/plugin-vue'
 import fs from 'fs';
 
 
-const host = 'snippets.testtheweb.page';
+const host = 'test.testtheweb.page';
 
 
 export default defineConfig({
@@ -26,9 +26,9 @@ export default defineConfig({
     server: {
         host,
         hmr: { host },
-        https: {
-            key: fs.readFileSync(`/etc/ssl/testtheweb/private.key`),
-            cert: fs.readFileSync(`/etc/ssl/testtheweb/certificate.crt`),
-        }
+        // https: {
+        //     key: fs.readFileSync(`/etc/ssl/testtheweb/private.key`),
+        //     cert: fs.readFileSync(`/etc/ssl/testtheweb/certificate.crt`),
+        // }
     }
 });
