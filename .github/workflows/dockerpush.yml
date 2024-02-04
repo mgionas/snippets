@@ -1,4 +1,4 @@
-name: publish steptwo
+name: publish three
 
 on:
   push:
