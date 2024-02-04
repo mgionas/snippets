@@ -1,25 +1,25 @@
-name: publish four
+name: Execute SSH Commands
 
 on:
   push:
-    branches: [ "main" ]
-
-env:
-  # Use docker.io for Docker Hub if empty
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.actor }}/<image-name>:latest
+    branches:
+      - main  # Or any other branch you want to trigger this workflow
 
 jobs:
-    deploy:
-        name: deploy image
-        runs-on: ubuntu-latest
+  ssh-remote-command:
+    name: Run SSH Commands on Remote Server
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-        steps:
-        - name: install ssh keys
-          # check this thread to understand why its needed:
-          # <https://stackoverflow.com/a/70447517>
-          run: ssh -o StrictHostKeyChecking=no root@45.79.249.235
-        - name: connect and pull
-          run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ~/ touch itworksfile.txt"
-        - name: cleanup
-          run: rm -rf ~/.ssh
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H 45.79.249.235 >> ~/.ssh/known_hosts
+          ssh -o StrictHostKeyChecking=no root@45.79.249.235 "echo 'SSH connection successful'"
+
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
