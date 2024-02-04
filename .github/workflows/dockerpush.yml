@@ -28,7 +28,7 @@ jobs:
           echo "Container removed or did not exist"
 
           # Create and start new container
-          ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "cd /home/docker/mybuild"
+          ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "cd home/docker/mybuild"
           echo "move to my build"
 
           # Create and start new container
