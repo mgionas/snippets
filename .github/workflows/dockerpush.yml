@@ -6,34 +6,60 @@ on:
       - main
 
 jobs:
-  ssh-remote-command:
-    name: Run SSH Commands on Remote Server
+  test-ssh-connection:
+    name: Test SSH Connection
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-
-          # Test SSH connection
           ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "echo 'SSH connection successful'"
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
-          # Remove existing container (ignore errors)
+  remove-existing-container:
+    name: Remove Existing Container
+    runs-on: ubuntu-latest
+    needs: test-ssh-connection
+    steps:
+      - name: Remove container
+        run: |
           ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "docker rm -f runit || true"
-          echo "Container removed or did not exist"
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
-          # Create and start new container
-          ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "cd /home/docker/mybuild && rm -r snippets && git clone https://github.com/mgionas/snippets.git"
+  clone-repo:
+    name: Clone Repository
+    runs-on: ubuntu-latest
+    needs: remove-existing-container
+    steps:
+      - name: Clone repo
+        run: |
+          ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "cd /home/docker/mybuild && rm -rf snippets && git clone https://github.com/mgionas/snippets.git"
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
-          # Create and start new container
+  build-docker-image:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    needs: clone-repo
+    steps:
+      - name: Build image
+        run: |
           ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "cd /home/docker/mybuild/snippets && docker build -t testup ."
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
-          # Create and start new container
+  start-container:
+    name: Start Container
+    runs-on: ubuntu-latest
+    needs: build-docker-image
+    steps:
+      - name: Start container with Docker Compose
+        run: |
           ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "cd /home/docker/mybuild/snippets && docker-compose up"
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
