@@ -27,6 +27,13 @@ jobs:
           ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "docker rm -f runit || true"
           echo "Container removed or did not exist"
 
+          # Create and start new container
+          ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "cd /home/docker/mybuild && rm -r snippets && git clone https://github.com/mgionas/snippets.git"
 
+          # Create and start new container
+          ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "cd /home/docker/mybuild/snippets && docker build -t testup ."
+
+          # Create and start new container
+          ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "cd /home/docker/mybuild/snippets && docker-compose up"
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
