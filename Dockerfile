@@ -16,6 +16,7 @@ COPY laravel.conf /etc/apache2/sites-available
 RUN a2dissite 000-default.conf \
     && a2enmod rewrite \
     && a2ensite laravel.conf \
+    && service apache2 restart \
     && chmod -R 777 /var/www/snippets/storage
 
 # Additional configurations or commands can be added here
