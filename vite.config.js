@@ -1,10 +1,6 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue'
-import fs from 'fs';
-
-
-const host = 'test.testtheweb.page';
 
 
 export default defineConfig({
@@ -24,11 +20,10 @@ export default defineConfig({
         })
     ],
     server: {
-        host,
-        hmr: { host },
-        // https: {
-        //     key: fs.readFileSync(`/etc/ssl/testtheweb/private.key`),
-        //     cert: fs.readFileSync(`/etc/ssl/testtheweb/certificate.crt`),
-        // }
+        hmr: {
+            host:'vite.test.testtheweb.page',
+            clientPort: 443,
+            protocol: 'wss'
+        },
     }
 });

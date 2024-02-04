@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y \
 
 # Copy the snippets directory to the container
 COPY . /var/www/snippets
+COPY vite.config.example /var/www/snippets/vite.config.js
 COPY laravel.conf /etc/apache2/sites-available
 
 RUN a2dissite 000-default.conf \
