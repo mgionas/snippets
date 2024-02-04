@@ -27,7 +27,7 @@ jobs:
     steps:
       - name: Remove container
         run: |
-          ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "docker rm -f runit || true"
+          ssh -v -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "docker rm -f runit || true"
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
