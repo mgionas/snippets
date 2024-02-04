@@ -29,7 +29,6 @@ jobs:
 
           # Create and start new container
           ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "cd /home/docker/mybuild && git clone https://github.com/mgionas/snippets.git"
-          echo "move to my build"
 
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
