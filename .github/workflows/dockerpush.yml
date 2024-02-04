@@ -31,7 +31,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "cd /home/docker/mybuild && rm -r snippets && git clone https://github.com/mgionas/snippets.git"
 
           # Create and start new container
-          ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "cd /home/docker/mybuild/snippets && docker build -t testapp"
+          ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "cd /home/docker/mybuild/snippets && docker build -t testapp ."
 
           # Create and start new container
           ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "docker run -d -t --testrun testapp"
