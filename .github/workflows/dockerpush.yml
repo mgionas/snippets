@@ -1,4 +1,4 @@
-name: Execute SSH Commands 3
+name: Execute SSH Commands 4
 
 on:
   push:
