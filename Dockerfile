@@ -19,4 +19,5 @@ RUN a2dissite 000-default.conf \
     && a2ensite laravel.conf \
     && chmod -R 777 /var/www/snippets/storage
 
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
 # Additional configurations or commands can be added here
