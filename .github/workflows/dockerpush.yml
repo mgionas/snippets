@@ -28,15 +28,13 @@ jobs:
           echo "Container removed or did not exist"
 
           # Create and start new container
-          ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "docker run -d -t -p 5001:8000 -p 5002:3000 --name runit gnaskdiashvili/laravelvueinertia"
-          echo "Container created and started"
+          ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "cd /home/docker/mybuild"
+          echo "move to my build"
 
-          # Start Apache service inside the container
-          ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "docker exec runit service apache2 start"
+          # Create and start new container
+          ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "git clone https://github.com/mgionas/snippets.git"
+          echo "move to my build"
 
-          # Start npm process in detached mode
-          ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "docker exec runit sh -c 'nohup npm run dev -- --host 0.0.0.0 --port 3000 > /dev/null 2>&1 &'"
-          echo "npm process started in detached mode"
 
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
