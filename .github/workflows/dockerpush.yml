@@ -17,10 +17,8 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
           ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "echo 'SSH connection successful'"
-          ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "echo '${{ secrets.LARAVEL_ENV }}' > /home/docker/mybuild/snippets/.env"
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          LARAVEL_ENV: ${{ secrets.LARAVEL_ENV }}
 
   clone-repo:
     name: Clone Repository
@@ -48,9 +46,10 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-          ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "cd /home/docker/mybuild/snippets && docker build -t testup ."
+          ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} "echo '${{ secrets.LARAVEL_ENV }}' > /home/docker/mybuild/snippets/.env && cd /home/docker/mybuild/snippets && docker build -t testup ."
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          LARAVEL_ENV: ${{ secrets.LARAVEL_ENV }}
 
   start-container:
     name: Start Container
