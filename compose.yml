@@ -1,7 +1,7 @@
 services:
   app:
     image: testup:latest
-    command: /bin/bash -c "apache2ctl restart && npm run dev -- --host 0.0.0.0"
+    command: /bin/bash -c "apache2ctl restart && php artisan key:generate && npm run dev -- --host 0.0.0.0"
     working_dir: /var/www/snippets  # Set the working directory
     networks:
       - nginxproxymanager_default
